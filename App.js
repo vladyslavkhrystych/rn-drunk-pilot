@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import {
-  StyleSheet,
   Text,
   View,
-  StatusBar,
   Alert,
+  StatusBar,
+  StyleSheet,
+  ImageBackground,
   TouchableOpacity,
 } from "react-native";
 
@@ -44,6 +45,10 @@ export default class App extends Component {
 
     this.gameEngine = null;
     this.entities = this.setupWorld();
+
+    this.state = {
+      running: true,
+    };
   }
 
   setupWorld = () => {
@@ -109,6 +114,11 @@ export default class App extends Component {
 
     Matter.World.add(world, [bird, floor, ceiling, pipe1, pipe2, pipe3, pipe4]);
 
+    Matter.Events.on(engine, "collisionStart", (event) => {
+      var pairs = event.pairs;
+      this.gameEngine.dispatch({ type: "game-over" });
+    });
+
     return {
       physics: { engine, world },
       bird: {
@@ -156,19 +166,41 @@ export default class App extends Component {
     };
   };
 
+  onEvent = (e) => {
+    if (e.type === "game-over") {
+      this.setState({ running: false });
+    }
+  };
+
   render() {
+    const { running } = this.state;
+
     return (
       <View style={styles.container}>
-        <GameEngine
-          ref={(ref) => {
-            this.gameEngine = ref;
-          }}
-          style={styles.game}
-          systems={[Physics]}
-          entities={this.entities}
-        >
-          <StatusBar hidden={true} />
-        </GameEngine>
+        {running ? (
+          <GameEngine
+            ref={(ref) => {
+              this.gameEngine = ref;
+            }}
+            style={styles.game}
+            systems={[Physics]}
+            onEvent={this.onEvent}
+            entities={this.entities}
+            running={this.state.running}
+          >
+            <StatusBar hidden={true} />
+          </GameEngine>
+        ) : (
+          <View
+            style={{
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text style={{ fontSize: 40, fontWeight: "900" }}>GAME OVER</Text>
+          </View>
+        )}
       </View>
     );
   }
