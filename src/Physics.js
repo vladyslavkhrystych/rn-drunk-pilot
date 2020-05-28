@@ -8,7 +8,7 @@ const Physics = (entities, { touches, time }) => {
   touches
     .filter((t) => t.type === "press")
     .forEach(() => {
-      Matter.Body.applyForce(bird, bird.position, { x: 0, y: -0.1 });
+      Matter.Body.applyForce(bird, bird.position, { x: 0, y: -0.09 });
     });
 
   for (let i = 1; i <= 4; i++) {

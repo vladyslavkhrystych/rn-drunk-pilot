@@ -3,6 +3,7 @@ import {
   Text,
   View,
   Alert,
+  Image,
   StatusBar,
   StyleSheet,
   ImageBackground,
@@ -20,6 +21,7 @@ import {
   maxWidth,
   maxHeight,
   gapSize,
+  Images,
   pipeWidth,
 } from "./src/Common/constants";
 
@@ -54,6 +56,7 @@ export default class App extends Component {
   setupWorld = () => {
     let engine = Matter.Engine.create({ enableSleeping: false });
     let world = engine.world;
+    world.gravity.y = 0.0;
 
     let bird = Matter.Bodies.rectangle(maxWidth / 4, maxHeight / 2, 50, 50);
 
@@ -177,6 +180,8 @@ export default class App extends Component {
 
     return (
       <View style={styles.container}>
+        <Image style={styles.backgroundImage} source={Images.background} />
+
         {running ? (
           <GameEngine
             ref={(ref) => {
@@ -210,5 +215,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "pink",
+  },
+  backgroundImage: {
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    width: maxWidth,
+    height: maxHeight,
   },
 });
