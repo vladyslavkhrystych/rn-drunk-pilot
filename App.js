@@ -126,8 +126,8 @@ export default class App extends Component {
       physics: { engine, world },
       bird: {
         body: bird,
-        color: "red",
-        size: [50, 50],
+        // color: "red",
+        size: [52, 36],
         renderer: Bird,
       },
       floor: {
